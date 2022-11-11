@@ -2,7 +2,7 @@ Just a simple TCP/IP Message Communication wrapper.
 Uses `serde` to data serialization in `bincode` format. Requires the type to derive `serde::Serialize` for sending and `serde:Deserialize` for receiving messages.
 
 Consider the following enum:
-```rs
+```rust
 use serde::{Serialize, Deserialize};
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
@@ -14,7 +14,7 @@ enum Chat {
 ```
 
 Receiving messages:
-```rs
+```rust
 use std::{io, net::TcpListener};
 
 fn main() -> io::Result<()> {
@@ -34,7 +34,7 @@ fn main() -> io::Result<()> {
 ```
 
 Sending messages:
-```rs
+```rust
 use serde::{Deserialize, Serialize};
 use std::{io, net::TcpStream};
 

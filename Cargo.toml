@@ -2,7 +2,7 @@
 name = "stmc"
 version = "0.1.0"
 edition = "2021"
-readme = "README"
+readme = "README.md"
 repository = "https://github.com/Defmc/stmc"
 categories = ["encoding", "network", "text-processing"]
 keywords = ["tcp", "network"]

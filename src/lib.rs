@@ -4,6 +4,9 @@ use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::io::{Error, ErrorKind};
 
+#[cfg(test)]
+pub mod test;
+
 /// Send a message through a stream
 /// # Errors
 /// Can fail in the data serialization

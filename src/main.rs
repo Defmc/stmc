@@ -12,16 +12,15 @@ pub enum DbAccessLog {
     Close,
 }
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn main() {
     let conn = TcpListener::bind(("127.0.0.1", 8080)).unwrap();
-    let host = thread::spawn(|| host(conn));
+    let host = thread::spawn(move || host(&conn));
     let client1 = thread::spawn(client);
     client1.join().unwrap();
     host.join().unwrap();
-    Ok(())
 }
 
-fn host(host: TcpListener) {
+fn host(host: &TcpListener) {
     for stream in host.incoming().flatten() {
         let mut stream = BufReader::new(stream);
         let mut buf: Vec<u8> = Vec::with_capacity(std::mem::size_of::<DbAccessLog>());
@@ -40,7 +39,7 @@ fn client() {
     let mut stream = BufWriter::new(stream);
     for _ in 0..500_000 {
         stmc::send(DbAccessLog::Name("Joe".to_string()), &mut stream).unwrap();
-        stmc::send(DbAccessLog::Id(177013), &mut stream).unwrap();
+        stmc::send(DbAccessLog::Id(177_013), &mut stream).unwrap();
         stmc::send(DbAccessLog::Name("Fynn".to_string()), &mut stream).unwrap();
     }
     stmc::send(DbAccessLog::Close, &mut stream).unwrap();

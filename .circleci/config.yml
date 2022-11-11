@@ -1,0 +1,68 @@
+version: 2.1
+
+commands:
+  save-cache-arts:
+    steps:
+      - save_cache:
+          key: cache-{{ checksum "Cargo.lock" }}
+          paths:
+            - ~/.cargo
+            - target
+  restore-cache-arts:
+    steps:
+      - restore_cache:
+          key: cache-{{ checksum "Cargo.lock" }}
+
+jobs:
+  build-linux:
+    docker:
+      - image: defmc/rust:latest
+    steps:
+      - checkout
+      - restore-cache-arts
+      - run: cargo --version
+      - run: cargo build --release
+      - save-cache-arts
+
+  clippy:
+    docker:
+      - image: defmc/rust:latest
+    steps:
+      - checkout
+      - restore-cache-arts
+      - run: cargo --version
+      - run: rustup component add clippy
+      - run: cargo clippy -- -D warnings
+
+  format:
+    docker:
+      - image: defmc/rust:latest
+    steps:
+      - checkout
+      - run: rustup component add rustfmt
+      - run: cargo --version
+      - run: cargo fmt --all -- --check
+
+  test:
+    docker:
+      - image: defmc/rust:latest
+    steps:
+      - checkout
+      - restore-cache-arts
+      - run: cargo --version
+      - run: cargo test --all
+  
+  bench:
+    docker:
+      - image: defmc/rust:latest
+    steps:
+      - checkout
+      - restore-cache-arts
+      - run: cargo --version
+      - run: cargo bench --all
+
+workflows:
+  test:
+    jobs: [build-linux, test, bench]
+  code-quality:
+    jobs: [format, clippy]

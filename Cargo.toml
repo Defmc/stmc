@@ -1,11 +1,11 @@
 [package]
 name = "stmc"
-version = "0.2.2"
+version = "0.2.3"
 edition = "2021"
 readme = "README.md"
 repository = "https://github.com/Defmc/stmc"
 categories = ["encoding", "text-processing"]
-keywords = ["tcp", "network"]
+keywords = ["tcp", "network", "udp"]
 license = "MIT"
 description = "Simple TCP/UDP Message Communication wrapper"
 
@@ -18,3 +18,6 @@ serde = { version = "1.0.147", features = ["derive"] }
 
 [badges]
 maintenance = { status = "passively-maintained" }
+
+[features]
+big_endian = []

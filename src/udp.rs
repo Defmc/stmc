@@ -12,9 +12,9 @@ where
         .len()
         .try_into()
         .map_err(|_| Error::new(ErrorKind::OutOfMemory, "size exceds the MsgSize limit"))?;
-    let mut pkg = len.to_le_bytes().to_vec();
+    let mut pkg = crate::to_bytes(len).to_vec();
     pkg.extend(raw);
-    sock.send(dbg!(&pkg))?;
+    sock.send(&pkg)?;
     Ok(())
 }
 
@@ -31,7 +31,7 @@ where
 {
     let mut buf_size = [0u8; SIZE_BYTES];
     sock.peek(&mut buf_size)?;
-    let len = MsgSize::from_le_bytes(dbg!(buf_size));
+    let len = crate::from_bytes(&buf_size);
     buf.resize(len as usize + SIZE_BYTES, 0u8);
     sock.recv(buf)?;
     crate::deserialize(&buf[SIZE_BYTES..])

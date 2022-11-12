@@ -7,7 +7,7 @@ use crate::{MsgSize, SIZE_BYTES};
 /// Send a message through a stream
 /// # Errors
 /// Can fail in the data serialization
-/// Fail when struct serialization exceds `u32::MAX`
+/// Fail when struct serialization exceds `MsgSize::MAX`
 /// Depends from writer to send the serialized data
 pub fn send<T>(msg: &T, stream: &mut impl Write) -> io::Result<()>
 where
@@ -17,8 +17,8 @@ where
     let len: MsgSize = raw
         .len()
         .try_into()
-        .map_err(|_| Error::new(ErrorKind::OutOfMemory, "size exceds the u32 limit"))?;
-    stream.write_all(&len.to_le_bytes())?;
+        .map_err(|_| Error::new(ErrorKind::OutOfMemory, "size exceds the MsgSize limit"))?;
+    stream.write_all(&crate::to_bytes(len))?;
     stream.write_all(&raw)
 }
 
@@ -42,7 +42,7 @@ where
 {
     let mut buf_size = [0u8; SIZE_BYTES];
     stream.read_exact(&mut buf_size)?;
-    let size = u32::from_le_bytes(buf_size);
+    let size = crate::from_bytes(&buf_size);
     buf.resize(size as usize, 0u8);
     stream.read_exact(buf)?;
     crate::deserialize(buf)

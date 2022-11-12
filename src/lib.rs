@@ -18,3 +18,19 @@ fn serialize<T: Serialize>(src: &T) -> io::Result<Vec<u8>> {
 fn deserialize<T: DeserializeOwned>(raw: &[u8]) -> io::Result<T> {
     bincode::deserialize(raw).map_err(|_| Error::new(ErrorKind::InvalidData, "can't deserialize"))
 }
+
+fn from_bytes(raw: &[u8; SIZE_BYTES]) -> MsgSize {
+    if cfg!(features = "big_endian") {
+        MsgSize::from_be_bytes(*raw)
+    } else {
+        MsgSize::from_le_bytes(*raw)
+    }
+}
+
+fn to_bytes(src: MsgSize) -> [u8; SIZE_BYTES] {
+    if cfg!(features = "big_endian") {
+        src.to_be_bytes()
+    } else {
+        src.to_le_bytes()
+    }
+}

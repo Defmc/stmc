@@ -2,6 +2,9 @@ use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::io::{self, Error, ErrorKind};
 
+pub type MsgSize = u32;
+pub const SIZE_BYTES: usize = std::mem::size_of::<MsgSize>();
+
 #[cfg(test)]
 pub mod test;
 

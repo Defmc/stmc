@@ -1,6 +1,8 @@
 use serde::{de::DeserializeOwned, Serialize};
-use std::io::{Error, ErrorKind, Write};
 use std::io::{self, Read};
+use std::io::{Error, ErrorKind, Write};
+
+use crate::{MsgSize, SIZE_BYTES};
 
 /// Send a message through a stream
 /// # Errors
@@ -12,7 +14,7 @@ where
     T: Serialize,
 {
     let raw = crate::serialize(msg)?;
-    let len: u32 = raw
+    let len: MsgSize = raw
         .len()
         .try_into()
         .map_err(|_| Error::new(ErrorKind::OutOfMemory, "size exceds the u32 limit"))?;
@@ -38,7 +40,7 @@ pub fn read_buf<T>(stream: &mut impl Read, buf: &mut Vec<u8>) -> io::Result<T>
 where
     T: DeserializeOwned,
 {
-    let mut buf_size = [0u8; 4];
+    let mut buf_size = [0u8; SIZE_BYTES];
     stream.read_exact(&mut buf_size)?;
     let size = u32::from_le_bytes(buf_size);
     buf.resize(size as usize, 0u8);

@@ -1,4 +1,4 @@
-Just a simple TCP/IP Message Communication wrapper.
+Just a simple TCP/UDP Message Communication wrapper.
 Uses `serde` to data serialization in `bincode` format. Requires the type to derive `serde::Serialize` for sending and `serde:Deserialize` for receiving messages.
 
 Consider the following enum:
@@ -47,3 +47,5 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 ```
+
+To use UDP protocol, just change from `tcp` to `udp`.

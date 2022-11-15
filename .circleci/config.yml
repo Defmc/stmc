@@ -43,7 +43,7 @@ jobs:
     resource_class: small
     steps:
       - checkout
-      - run: cargo fmt -vv --all -- --check
+      - run: cargo fmt -v --all -- --check
 
   test:
     docker:
@@ -72,7 +72,7 @@ jobs:
     steps:
       - checkout
       - run: cargo generate-lockfile -vv
-      - run: cargo audit -vv
+      - run: cargo audit
 
   bench:
     docker:

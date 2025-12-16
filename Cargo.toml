@@ -13,7 +13,7 @@ description = "Simple TCP/UDP Message Communication wrapper"
 name = "stmc"
 
 [dependencies]
-bincode = "1.3.3"
+bincode = "3.0.0"
 serde = { version = "1.0.188", features = ["derive"] }
 
 [badges]
